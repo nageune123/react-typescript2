@@ -1,8 +1,11 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import {useQuery} from "react-query";
+import { useQuery } from "react-query";
 import { fetchCoins } from "./Api";
+import { Helmet } from "react-helmet";
+import {useSetRecoilState} from "recoil";
+import { isDarkAtom } from "../atom";
 
 
 
@@ -19,11 +22,14 @@ justify-content:center;
 align-items:center;
 `;
 const CoinsList = styled.ul``;
+
+
 const Coin = styled.li`
-background-color:white ;
-color:${props => props.theme.bgColor};
+ background-color: ${(props) => props.theme.cardBgColor};
+  color: ${(props) => props.theme.textColor};
 margin-bottom : 10px;
 border-radius:15px;
+border: 1px solid white;
 a{
     transition : color 0.2s ease-in;
     display:flex;
@@ -67,19 +73,24 @@ margin-right:10px;
 
 
 
+
 function Coins() {
-   const {isLoading,data} = useQuery<ICoin[]>("AllCoins",fetchCoins);
-   console.log(data);
-//    const (toggle,setToggle) = useState(true);
+    const setDarkAtom = useSetRecoilState(isDarkAtom);
+    const toggleDarkAtom = ()=> setDarkAtom(prev =>  !prev);
+
+    const { isLoading, data } = useQuery<ICoin[]>("AllCoins", fetchCoins);
+
+    //    const (toggle,setToggle) = useState(true);
 
     return <Container>
-     
+        <Helmet>코인</Helmet>
         <Header>
             <Title>코인</Title>
+            <button onClick={toggleDarkAtom} >Toggle Mode</button>
         </Header>
-       
+
         {isLoading ? <Loader>"Loading..."</Loader> : <CoinsList>
-            {data?.slice(0,100).map(coin => <Coin key={coin.id}>
+            {data?.slice(0, 100).map(coin => <Coin key={coin.id}>
                 <Link to={{
                     pathname: `/${coin.id}`,
                     state: { name: coin.name },
@@ -87,7 +98,7 @@ function Coins() {
                     <Img src={`https://cryptocurrencyliveprices.com/img/${coin.id}.png`} />
                     {coin.name} &rarr;</Link></Coin>)}
         </CoinsList>}
-       
+
     </Container>
 
 

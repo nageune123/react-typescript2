@@ -4,14 +4,14 @@ import Coins from "./Coins";
 
 
 
-function Router() {
+function Router( ) {
     return <BrowserRouter>
         <Switch>
             <Route path="/:coinId">
-                <Coin/>
+                <Coin />
             </Route>
             <Route path="/">
-                <Coins></Coins>
+                <Coins  ></Coins>
             </Route>
         </Switch>
     </BrowserRouter>
